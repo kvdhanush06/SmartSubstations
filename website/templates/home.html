@@ -4,8 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Smart Substation Demo</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
       .table-borderless td, .table-borderless th {
         border: none !important;
@@ -74,14 +73,14 @@
             </td>
             <td class="align-middle">
               <div class="d-flex flex-column align-items-center">
-                <button class="btn btn-light mb-2 load-button" data-mw="20" aria-label="Load 20 MW">Feeder 1<br>20MW</button>
-                <button class="btn btn-light mb-2 load-button" data-mw="30" aria-label="Load 30 MW">Feeder 2<br>30MW</button>
-                <button class="btn btn-light mb-2 load-button" data-mw="10" aria-label="Load 10 MW">Feeder 3<br>10MW</button>
-                <button class="btn btn-light mb-2 load-button" data-mw="15" aria-label="Load 15 MW">Feeder 4<br>15MW</button>
-                <button class="btn btn-light mb-2 load-button" data-mw="10" aria-label="Load 10 MW">Feeder 5<br>10MW</button>
-                <button class="btn btn-light mb-2 load-button" data-mw="20" aria-label="Load 20 MW">Feeder 6<br>20MW</button>
-                <button class="btn btn-light mb-2 load-button" data-mw="25" aria-label="Load 25 MW">Feeder 7<br>25MW</button>
-                <button class="btn btn-light mb-2 load-button" data-mw="10" aria-label="Load 10 MW">Feeder 8<br>10MW</button>
+                <button class="btn btn-light mb-2 load-button" data-mw="20">Feeder 1<br>20MW</button>
+                <button class="btn btn-light mb-2 load-button" data-mw="30">Feeder 2<br>30MW</button>
+                <button class="btn btn-light mb-2 load-button" data-mw="10">Feeder 3<br>10MW</button>
+                <button class="btn btn-light mb-2 load-button" data-mw="15">Feeder 4<br>15MW</button>
+                <button class="btn btn-light mb-2 load-button" data-mw="10">Feeder 5<br>10MW</button>
+                <button class="btn btn-light mb-2 load-button" data-mw="20">Feeder 6<br>20MW</button>
+                <button class="btn btn-light mb-2 load-button" data-mw="25">Feeder 7<br>25MW</button>
+                <button class="btn btn-light mb-2 load-button" data-mw="10">Feeder 8<br>10MW</button>
               </div>
             </td>
           </tr>
@@ -90,95 +89,20 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
-    document.querySelectorAll('.editIcon').forEach(editIcon => {
-        editIcon.addEventListener('click', function() {
-            const row = editIcon.closest('.row');
-            const button = row.querySelector('.input-source');
-            const costText = row.querySelector('.costText');
-            const capacityText = row.querySelector('.capacityText');
-            
-            const costInput = document.createElement('input');
-            costInput.type = 'number';
-            costInput.value = costText.textContent.replace('Rs. ', '');
-            costInput.className = 'costInput';
-            costInput.style.width = '60px';
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadButtons = document.querySelectorAll('.load-button');
+            const inputSourceButtons = document.querySelectorAll('.input-source');
+            const totalLoadBtn = document.getElementById('total-load');
+            const availablePowerBtn = document.getElementById('available-power');
+            const extraPowerBtn = document.getElementById('extra-power');
+            const totalCostBtn = document.getElementById('total-cost');
 
-            const capacityInput = document.createElement('input');
-            capacityInput.type = 'number';
-            capacityInput.value = capacityText.textContent.replace('MW', '');
-            capacityInput.className = 'capacityInput';
-            capacityInput.style.width = '50px';
-
-            costText.replaceWith(costInput);
-            capacityText.replaceWith(capacityInput);
-
-            costInput.focus();
-
-            function handleEnter(event) {
-                if (event.key === 'Enter') {
-                    const newCost = parseFloat(costInput.value);
-                    const newCapacity = parseFloat(capacityInput.value);
-
-                    if (isNaN(newCost) || isNaN(newCapacity)) {
-                        alert("Please enter valid numerical values.");
-                        return;
-                    }
-
-                    button.setAttribute('data-cost', newCost);
-                    button.setAttribute('data-mw', newCapacity);
-
-                    costText.textContent = `${newCost}`;
-                    capacityText.textContent = `${newCapacity}`;
-
-                    costInput.replaceWith(costText);
-                    capacityInput.replaceWith(capacityText);
-
-                    const titleText = button.querySelector("#title")?.textContent;
-                    if (titleText) {
-                        localStorage.setItem(titleText + "_costText", costText.textContent);
-                        localStorage.setItem(titleText + "_capacityText", capacityText.textContent);
-                    } else {
-                        console.warn("Title text not found for localStorage key.");
-                    }
-
-                    costInput.removeEventListener('keydown', handleEnter);
-                    capacityInput.removeEventListener('keydown', handleEnter);
-                }
-            }
-
-            costInput.addEventListener('keydown', handleEnter);
-            capacityInput.addEventListener('keydown', handleEnter);
-        });
-    });
-
-      const loadButtons = document.querySelectorAll('.load-button');
-      const inputSourceButtons = document.querySelectorAll('.input-source');
-      const totalLoadBtn = document.getElementById('total-load');
-      const availablePowerBtn = document.getElementById('available-power');
-      const totalCostBtn = document.getElementById('avg-cost');
-
-      const availablePower = Array.from(inputSourceButtons).reduce((acc, btn) => acc + parseFloat(btn.getAttribute('data-mw')), 0);
-      availablePowerBtn.textContent = `Total Available Power: ${availablePower.toFixed(0)}MW`;
-
-      inputSourceButtons.forEach(button => {
-        const titleText = button.querySelector("#title")?.textContent;
-        if (titleText && isInLocalStorage(titleText + "_costText")) {
-            button.querySelector(".costText").textContent = JSON.parse(localStorage.getItem(titleText + "_costText"))
-            button.querySelector(".capacityText").textContent = JSON.parse(localStorage.getItem(titleText + "_capacityText"))
-            button.setAttribute("data-cost", JSON.parse(localStorage.getItem(titleText + "_costText")));
-            button.setAttribute("data-mw", JSON.parse(localStorage.getItem(titleText + "_capacityText")));
-        } else {
-            console.warn("Title text not found for localStorage key.");
-        }
-      });
-
-      const sortedInputSourceButtons = Array.from(inputSourceButtons).sort((a, b) => {
-          return parseFloat(a.getAttribute('data-cost')) - parseFloat(b.getAttribute('data-cost'));
-      });
-
-      function isInLocalStorage(key) {
-        return localStorage.getItem(key) !== null;
-      }
+            let availablePower = 0;
+            let totalCost = 0;
+            let extraPower = 0;
+            availablePowerBtn.textContent = `Available Power: ${availablePower}MW`;
+            extraPowerBtn.textContent = `Extra Power: ${extraPower}MW`;
+            totalCostBtn.textContent = `Total Power Cost: Rs. ${totalCost}`;
 
       loadButtons.forEach(button => {
           button.addEventListener('click', function () {
